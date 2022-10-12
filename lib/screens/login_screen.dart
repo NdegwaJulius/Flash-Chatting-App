@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting_app/components/components.dart';
 import 'package:flutter_chatting_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chatting_app/screens/chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id ='login_screen';
@@ -9,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
   late  String email;
   late String password;
   @override
@@ -32,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   //Do something with the user input.
@@ -59,11 +63,19 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
                 color: Colors.lightBlueAccent,
                 title: 'Log In',
-                onPressed: (){
-                  print(email);
-                  print(password);
+                onPressed: () async{
+                try {
+                 final user = await _auth.signInWithEmailAndPassword(email: email, password: password);
+                 if(user != null) {
+                   Navigator.pushNamed(context, ChatScreen.id);
+                 }
                 }
-            )
+                catch(e)  {
+                  print(e);
+                }
+    }
+
+            ),
           ],
         ),
       ),
