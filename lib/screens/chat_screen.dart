@@ -35,24 +35,24 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
   }
-  void getMessages() async {
-    final messages = await _firestore.collection('messages').get();
-
-    for (var message in messages.docs) { // <-- BEFORE
-      print(message.data());
-    }
-
-    for (var message in messages.docs) { // <-- NOW
-      print(message.data());
-    }
-  }
-  // void messageStream() async{
-  //   await for (var snapshot in _firestore.collection('messages').snapshots()) {
-  //     for(var message in snapshot.docs){
-  //       print(message.data);
-  //     }
+  // void getMessages() async {
+  //   final messages = await _firestore.collection('messages').get();
+  //
+  //   for (var message in messages.docs) { // <-- BEFORE
+  //     print(message.data());
+  //   }
+  //
+  //   for (var message in messages.docs) { // <-- NOW
+  //     print(message.data());
   //   }
   // }
+  void messageStream() async{
+    await for (var snapshot in _firestore.collection('messages').snapshots()) {
+      for(var message in snapshot.docs){
+        print(message.data);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 //Implement logout functionality
                // _auth.signOut();
                 //getMessages();
-                getMessages();
+                messageStream();
                // Navigator.pop(context);
               }),
         ],
